@@ -63,6 +63,11 @@ const settings = definePluginSettings({
             { label: "1x02", value: DisplayFormat.MINIMAL }
         ]
     },
+    preferSeriesName: {
+        type: OptionType.BOOLEAN,
+        description: "Show series name instead of episode title in status title",
+        default: false
+    },
     showTimestamps: {
         type: OptionType.BOOLEAN,
         description: "Show elapsed/remaining time",
@@ -383,7 +388,9 @@ export default definePlugin({
 
             const activity = {
                 application_id: DISCORD_APP_ID,
-                name: mediaData.title,
+                name: mediaData.type === MediaType.EPISODE && settings.store.preferSeriesName ?
+                    (mediaData.series || mediaData.title) :
+                    mediaData.title,
                 details: getDetails(),
                 state: getState(),
                 assets,
